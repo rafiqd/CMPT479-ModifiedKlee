@@ -59,6 +59,23 @@ namespace klee {
 
 Searcher::~Searcher() {
 }
+///
+
+ExecutionState &HotSpotSearcher::selectState() {
+  return *states.back();
+}
+
+void HotSpotSearcher::update(ExecutionState *current,
+                         const std::set<ExecutionState*> &addedStates,
+                         const std::set<ExecutionState*> &removedStates) {
+    
+    states.insert(states.end(), addedStates.begin(), addedStates.end());
+    for (std::set<ExecutionState*>::const_iterator it = removedStates.begin(), ie = removedStates.end(); it != ie; ++it) {
+      ExecutionState *es = *it;
+      states.erase(it);
+    }
+  }
+}
 
 ///
 
@@ -69,9 +86,7 @@ ExecutionState &DFSSearcher::selectState() {
 void DFSSearcher::update(ExecutionState *current,
                          const std::set<ExecutionState*> &addedStates,
                          const std::set<ExecutionState*> &removedStates) {
-  states.insert(states.end(),
-                addedStates.begin(),
-                addedStates.end());
+  states.insert(states.end(), addedStates.begin(), addedStates.end());
   for (std::set<ExecutionState*>::const_iterator it = removedStates.begin(),
          ie = removedStates.end(); it != ie; ++it) {
     ExecutionState *es = *it;
@@ -184,7 +199,7 @@ WeightedRandomSearcher::~WeightedRandomSearcher() {
 }
 
 ExecutionState &WeightedRandomSearcher::selectState() {
-  return *states->choose(theRNG.getDoubleL());
+  return *states->choose( theRNG.getDoubleL() );
 }
 
 double WeightedRandomSearcher::getWeight(ExecutionState *es) {

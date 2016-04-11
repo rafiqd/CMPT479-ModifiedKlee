@@ -76,9 +76,25 @@ namespace klee {
       NURS_Depth,
       NURS_ICnt,
       NURS_CPICnt,
-      NURS_QC
+      NURS_QC,
+      HSS
     };
   };
+  
+  class HotSpotSearcher : public Searcher {
+    std::vector<ExecutionState*> states;
+
+  public:
+    ExecutionState &selectState();
+    void update(ExecutionState *current,
+                const std::set<ExecutionState*> &addedStates,
+                const std::set<ExecutionState*> &removedStates);
+    bool empty() { return states.empty(); }
+    void printName(llvm::raw_ostream &os) {
+      os << "HotSpotSearcher\n";
+    }
+  };
+  
 
   class DFSSearcher : public Searcher {
     std::vector<ExecutionState*> states;

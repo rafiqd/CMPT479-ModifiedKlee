@@ -12,7 +12,7 @@
 #
 LEVEL = .
 
-include $(LEVEL)/Makefile.config
+include $(LEVEL)/Makefile.config.in
 
 # The header files are normally installed
 # by the install-local target in the top-level

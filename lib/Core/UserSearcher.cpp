@@ -31,6 +31,7 @@ namespace {
 			clEnumValN(Searcher::NURS_ICnt, "nurs:icnt", "use NURS with Instr-Count"),
 			clEnumValN(Searcher::NURS_CPICnt, "nurs:cpicnt", "use NURS with CallPath-Instr-Count"),
 			clEnumValN(Searcher::NURS_QC, "nurs:qc", "use NURS with Query-Cost"),
+			clEnumValN(Searcher::HSS, "hss", "use HotSpot Searcher (HSS)"),
 			clEnumValEnd));
 
   cl::opt<bool>
