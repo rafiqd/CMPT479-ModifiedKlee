@@ -23,10 +23,15 @@ namespace llvm {
   class raw_ostream;
 }
 
+  
 namespace klee {
   template<class T> class DiscretePDF;
   class ExecutionState;
   class Executor;
+  
+  
+  bool hotSpotSorter ( ExecutionState* i, ExecutionState* j);
+
 
   class Searcher {
   public:

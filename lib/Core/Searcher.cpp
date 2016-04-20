@@ -45,6 +45,8 @@
 #include <fstream>
 #include <climits>
 
+#include <algorithm> 
+
 using namespace klee;
 using namespace llvm;
 
@@ -65,6 +67,28 @@ ExecutionState &HotSpotSearcher::selectState() {
   return *states.back();
 }
 
+bool hotSpotSorter ( ExecutionState* i, ExecutionState* j);
+bool hotSpotSorter ( ExecutionState* i, ExecutionState* j) { 
+  
+    KInstruction* iinst = *i->prevPC;
+    KInstruction* jinst = *j->prevPC;
+    int iweight = 0, jweight = 0;
+    
+    if( iinst->inst->hasMetadata() ){
+      iinst->inst->getMetadata("weight"); 
+      std::string stri = cast<MDString>( iinst->inst->getMetadata("weight")->getOperand(0))->getString().str();
+      iweight = std::stoi( stri );
+    }
+    
+    if( jinst->inst->hasMetadata() ){
+      jinst->inst->getMetadata("weight"); 
+      std::string strj = cast<MDString>( jinst->inst->getMetadata("weight")->getOperand(0))->getString().str();
+      jweight = std::stoi( strj );
+    }
+    
+    return iweight < jweight; 
+}
+
 void HotSpotSearcher::update(ExecutionState *current,
                          const std::set<ExecutionState*> &addedStates,
                          const std::set<ExecutionState*> &removedStates) {
@@ -74,6 +98,8 @@ void HotSpotSearcher::update(ExecutionState *current,
       ExecutionState *es = *it;
       states.erase(it);
     }
+    
+    std::sort( states.begin(), states.end(), hotSpotSorter );
   }
 }
 
